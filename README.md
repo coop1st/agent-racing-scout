@@ -1,6 +1,6 @@
 # Agent Racing Scout
 
-Personal project for scouting horse racing across the **UK, Ireland, France, and USA**, shortlisting horses worth a closer look for betting purposes via the **Racing Scout** agent. Criteria are developed and refined over time, not fixed up front.
+Personal project for scouting **Flat** horse racing across the **UK, Ireland, France, and USA**, shortlisting horses worth a closer look for betting purposes via the **Racing Scout** agent. Criteria are developed and refined over time, not fixed up front. Jumps/National Hunt racing is out of scope here — a separate scout will be built for that later.
 
 ## Layout
 
@@ -36,8 +36,8 @@ Each run checks the Notebook, the trainer follow list, and current criteria agai
 - [x] Folder structure
 - [x] Racing Scout agent
 - [x] Notebook + trainer follow list structure
+- [x] GitHub repo pushed (needed for the cloud scheduled routine)
+- [x] Email delivery wired up (Gmail MCP connector — drafts only, no send capability, so the agent creates/updates a Gmail draft each cycle for the user to send manually)
 - [ ] Add first criteria to `data/criteria/criteria.md`
-- [ ] GitHub repo pushed (needed for the cloud scheduled routine)
-- [ ] Email delivery wired up (Gmail — checking for an MCP connector vs. local fallback)
 - [ ] Sunday/Wednesday 2pm Irish time routine created
 - [ ] Run first scouting session
