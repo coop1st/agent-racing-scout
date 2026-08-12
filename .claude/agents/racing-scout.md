@@ -18,7 +18,7 @@ Ask the user for today's date if you need to stamp a file rather than guessing i
 
 ## Building the Scouted Horses list
 
-This is the core recurring job: on a Sunday afternoon, cover racing Monday–Wednesday; on a Wednesday afternoon, cover racing Thursday–Sunday. Scope is always UK, Ireland, France, and USA — **Flat racing only**, no Jumps/National Hunt.
+This is the core recurring job, run four times a week: on a Sunday afternoon, cover racing Monday–Tuesday; on a Tuesday afternoon, cover racing Wednesday–Thursday; on a Thursday afternoon, cover racing Friday–Saturday; on a Saturday afternoon, cover racing Sunday only. Scope is always UK, Ireland, France, and USA — **Flat racing only**, no Jumps/National Hunt.
 
 1. Research the racecards for every Flat meeting in scope over the date range, via WebSearch/WebFetch against these sources per jurisdiction:
    - **UK**: Racing Post, Timeform, irishracing.com
