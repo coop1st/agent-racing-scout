@@ -7,11 +7,12 @@ Run with: python scripts/test_build_tracked_horses.py
 """
 import json
 import sys
+import tempfile
 from datetime import date
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
-from build_tracked_horses import build  # noqa: E402
+from build_tracked_horses import build, build_merged  # noqa: E402
 
 FIXTURES = json.loads((Path(__file__).parent / "test_samples.json").read_text())
 
@@ -72,9 +73,55 @@ def test_status_dedup_keeps_most_advanced():
     print("test_status_dedup_keeps_most_advanced OK")
 
 
+def test_merge_preserves_prior_batches():
+    with tempfile.TemporaryDirectory() as tmp:
+        out_path = Path(tmp) / "tracked.xlsx"
+        batch1 = [{"source": "horsetracker", "date": "2026-08-05T12:00:00Z", "subject": "HorseTracker Update",
+                   "text": "## Tracked Horses\n### Kaaranah (IRE)\n\n*entered at Lingfield on Thursday 13th Aug 5.25*"}]
+        build(batch1, date(2026, 8, 1)).to_excel(out_path, index=False)
+
+        batch2 = [{"source": "horsetracker", "date": "2026-08-06T12:00:00Z", "subject": "HorseTracker Update",
+                   "text": "## Tracked Horses\n### Manaar (IRE)\n\n*declared to run at Kempton on Wednesday 12th Aug 6.00*"}]
+        merged = build_merged(batch2, date(2026, 8, 1), out_path)
+        assert set(merged["Horse"]) == {"Kaaranah", "Manaar"}
+        print("test_merge_preserves_prior_batches OK")
+
+
+def test_merge_updates_status_of_existing_row():
+    with tempfile.TemporaryDirectory() as tmp:
+        out_path = Path(tmp) / "tracked.xlsx"
+        batch1 = [{"source": "horsetracker", "date": "2026-08-05T12:00:00Z", "subject": "HorseTracker Update",
+                   "text": "## Tracked Horses\n### Kaaranah (IRE)\n\n*entered at Lingfield on Thursday 13th Aug 5.25*"}]
+        build(batch1, date(2026, 8, 1)).to_excel(out_path, index=False)
+
+        batch2 = [{"source": "horsetracker", "date": "2026-08-09T12:00:00Z", "subject": "HorseTracker Update",
+                   "text": "## Tracked Horses\n### Kaaranah (IRE)\n\n*declared to run at Lingfield on Thursday 13th Aug 5.30*"}]
+        merged = build_merged(batch2, date(2026, 8, 1), out_path)
+        assert len(merged) == 1
+        assert merged.iloc[0]["Status"] == "declared"
+        assert merged.iloc[0]["Race Time"] == "17:30"
+        print("test_merge_updates_status_of_existing_row OK")
+
+
+def test_merge_reapplies_future_filter_to_existing_rows():
+    with tempfile.TemporaryDirectory() as tmp:
+        out_path = Path(tmp) / "tracked.xlsx"
+        batch1 = [{"source": "horsetracker", "date": "2026-08-05T12:00:00Z", "subject": "HorseTracker Update",
+                   "text": "## Tracked Horses\n### Kaaranah (IRE)\n\n*entered at Lingfield on Thursday 13th Aug 5.25*"}]
+        build(batch1, date(2026, 8, 1)).to_excel(out_path, index=False)
+
+        # A later run, as_of has now passed the existing row's race date -- it should drop out.
+        merged = build_merged([], date(2026, 8, 20), out_path)
+        assert len(merged) == 0
+        print("test_merge_reapplies_future_filter_to_existing_rows OK")
+
+
 if __name__ == "__main__":
     test_full_sample_set()
     test_future_filter()
     test_virtualstable_country_suffix_name()
     test_status_dedup_keeps_most_advanced()
+    test_merge_preserves_prior_batches()
+    test_merge_updates_status_of_existing_row()
+    test_merge_reapplies_future_filter_to_existing_rows()
     print("All tests passed.")

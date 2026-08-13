@@ -214,21 +214,17 @@ def parse_horsetracker(item: dict) -> list[dict]:
     return results
 
 
-def build(raw_items: list[dict], as_of) -> pd.DataFrame:
-    rows = []
-    for item in raw_items:
-        if item["source"] == "virtualstable":
-            rows.extend(parse_virtualstable(item))
-        elif item["source"] == "horsetracker":
-            rows.extend(parse_horsetracker(item))
+OUTPUT_COLUMNS = ["Horse", "Country", "Track", "Race Date", "Race Time",
+                  "Status", "Source", "Notes", "Last Updated"]
 
+
+def _finalize(rows: list[dict], as_of) -> pd.DataFrame:
     if not rows:
-        return pd.DataFrame(columns=[
-            "Horse", "Country", "Track", "Race Date", "Race Time",
-            "Status", "Source", "Notes", "Last Updated",
-        ])
+        return pd.DataFrame(columns=OUTPUT_COLUMNS)
 
     df = pd.DataFrame(rows)
+    df["race_date"] = pd.to_datetime(df["race_date"]).dt.date
+    df["email_date"] = pd.to_datetime(df["email_date"]).dt.date
     df = df[df["race_date"] >= as_of]
 
     df["rank"] = df["status"].map(STATUS_RANK).fillna(0)
@@ -242,8 +238,50 @@ def build(raw_items: list[dict], as_of) -> pd.DataFrame:
         "status": "Status", "source": "Source", "notes": "Notes",
         "email_date": "Last Updated",
     })
-    return df[["Horse", "Country", "Track", "Race Date", "Race Time",
-               "Status", "Source", "Notes", "Last Updated"]]
+    return df[OUTPUT_COLUMNS]
+
+
+def _rows_from_raw(raw_items: list[dict]) -> list[dict]:
+    rows = []
+    for item in raw_items:
+        if item["source"] == "virtualstable":
+            rows.extend(parse_virtualstable(item))
+        elif item["source"] == "horsetracker":
+            rows.extend(parse_horsetracker(item))
+    return rows
+
+
+def _rows_from_existing(path: Path) -> list[dict]:
+    """Convert an already-built output sheet back into the internal row
+    format so it can be re-merged, re-deduped, and re-filtered alongside a
+    fresh batch of parsed rows (used by --merge)."""
+    if not path.exists():
+        return []
+    existing = pd.read_excel(path)
+    rows = []
+    for _, r in existing.iterrows():
+        rows.append({
+            "horse": r["Horse"], "country": r["Country"], "track": r["Track"],
+            "race_date": pd.to_datetime(r["Race Date"]).date(),
+            "race_time": r["Race Time"] if pd.notna(r["Race Time"]) else None,
+            "status": r["Status"], "source": r["Source"],
+            "notes": r["Notes"] if pd.notna(r["Notes"]) else None,
+            "email_date": pd.to_datetime(r["Last Updated"]).date(),
+        })
+    return rows
+
+
+def build(raw_items: list[dict], as_of) -> pd.DataFrame:
+    return _finalize(_rows_from_raw(raw_items), as_of)
+
+
+def build_merged(raw_items: list[dict], as_of, existing_path: Path) -> pd.DataFrame:
+    """Like build(), but unions the freshly parsed rows with whatever is
+    already in existing_path before re-deduping and re-filtering -- safe to
+    call repeatedly/incrementally across many small batches, e.g. as a
+    resumable backfill checkpoints its progress."""
+    rows = _rows_from_raw(raw_items) + _rows_from_existing(existing_path)
+    return _finalize(rows, as_of)
 
 
 def main():
@@ -251,6 +289,9 @@ def main():
     ap.add_argument("--input", default="tracked_emails_raw.json")
     ap.add_argument("--output", default="data/tracked/tracked-horses.xlsx")
     ap.add_argument("--as-of", default=None, help="YYYY-MM-DD, defaults to today UTC")
+    ap.add_argument("--merge", action="store_true",
+                     help="Union new rows with whatever is already in --output "
+                          "instead of overwriting it -- for incremental/checkpointed runs.")
     args = ap.parse_args()
 
     as_of = (
@@ -259,9 +300,10 @@ def main():
     )
 
     raw_items = json.loads(Path(args.input).read_text(encoding="utf-8"))
-    df = build(raw_items, as_of)
-
     out_path = Path(args.output)
+
+    df = build_merged(raw_items, as_of, out_path) if args.merge else build(raw_items, as_of)
+
     out_path.parent.mkdir(parents=True, exist_ok=True)
     df.to_excel(out_path, index=False)
     print(f"Wrote {len(df)} upcoming tracked-horse rows to {out_path}")
