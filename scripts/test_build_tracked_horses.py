@@ -50,6 +50,14 @@ def test_future_filter():
     print(f"test_future_filter OK ({len(df)} rows)")
 
 
+def test_virtualstable_country_suffix_name():
+    df = build(FIXTURES, date(2025, 8, 1))
+    records = df.to_dict("records")
+    rows = {(r["Horse"], r["Track"], str(r["Race Date"])): r for r in records}
+    assert ("Milliat (IRE)", "PRESQUE ISLE DOWNS", "2025-09-19") in rows
+    print("test_virtualstable_country_suffix_name OK")
+
+
 def test_status_dedup_keeps_most_advanced():
     items = [
         {"source": "horsetracker", "date": "2026-08-05T12:00:00Z", "subject": "HorseTracker Update",
@@ -67,5 +75,6 @@ def test_status_dedup_keeps_most_advanced():
 if __name__ == "__main__":
     test_full_sample_set()
     test_future_filter()
+    test_virtualstable_country_suffix_name()
     test_status_dedup_keeps_most_advanced()
     print("All tests passed.")
