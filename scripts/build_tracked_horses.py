@@ -68,7 +68,7 @@ def parse_virtualstable(item: dict) -> list[dict]:
     email_dt = datetime.fromisoformat(item["date"].replace("Z", "+00:00"))
 
     m = re.search(
-        r"([A-Za-z0-9'\- ]+?)\s+is entered (?:on ([A-Za-z]+ \d{1,2}, \d{4})|(today)) at ([A-Z][A-Za-z0-9 '\-]+?)\.",
+        r"([A-Za-z0-9'()\- ]+?)\s+is entered (?:on ([A-Za-z]+ \d{1,2}, \d{4})|(today)) at ([A-Z][A-Za-z0-9 '\-]+?)\.",
         text,
     )
     if not m:
