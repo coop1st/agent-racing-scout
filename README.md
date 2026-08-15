@@ -37,7 +37,10 @@ Each run checks the Notebook, the trainer follow list, and current criteria agai
 - [x] Racing Scout agent
 - [x] Notebook + trainer follow list structure
 - [x] GitHub repo pushed (needed for the cloud scheduled routine)
-- [x] Email delivery wired up (Gmail MCP connector — drafts only, no send capability, so the agent creates/updates a Gmail draft each cycle for the user to send manually)
+- [x] Email delivery wired up (Gmail MCP connector — drafts only, no send capability, so the agent creates/updates a Gmail draft each cycle for the user to send manually). The Gmail connector is permanently parked on **cooperkevin1985@gmail.com** (decided 2026-08-15) — this is also the account the horsetracker/virtualstable tracked-horse emails land in, so no account-swapping or forwarding filter is needed. Scouted Horses drafts are self-addressed to cooperkevin1985@gmail.com.
 - [x] Criteria added to `data/criteria/criteria.md` (4 so far: top sire/damsire in maiden-novice, 2nd career start for a followed trainer, class-drop off Group form, USA top-trainer MSW-to-claimer drop)
 - [x] Sunday/Wednesday 2pm Irish time routine created (cloud routines `trig_012sduS8BWEiDkkicECJSokm` Sun, `trig_01HCT4cvt9yD9CYUuSmJ6Y23` Wed)
-- [ ] Run first scouting session (infrastructure now confirmed working: network access to UK/Ireland/France sources plus Horse Racing Nation/NYRA for USA, Gmail draft creation, and GitHub push all verified via test runs — next real cycle should be a clean end-to-end run)
+- [x] Run first scouting session (infrastructure confirmed working: network access to UK/Ireland/France sources plus Horse Racing Nation/NYRA for USA, Gmail draft creation, and GitHub push all verified via test runs)
+- [ ] Tracked-horses 15-month backfill (in progress, started 2026-08-15 — see `data/tracked/` and the handoff doc)
+- [ ] Wire tracked horses into Scouted Horses Top Tier criteria (after backfill completes)
+- [ ] Weekly incremental tracked-horses update schedule (after backfill completes)
