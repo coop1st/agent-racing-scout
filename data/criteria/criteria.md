@@ -4,7 +4,7 @@ This file grows as we develop and refine criteria/systems together. When a new r
 
 ## Tiering in the Scouted Horses output
 
-Every qualifying horse is placed in one of two lists in the output/email: **Top Tier** or **The Rest**. Each criterion below is tagged with which tier it produces. Fixed rule (not a criterion, always applies): **Notebook horses are always Top Tier.** Qualifying purely via a followed trainer (no other criterion met) is The Rest, unless a specific criterion says otherwise.
+Every qualifying horse is placed in one of two lists in the output/email: **Top Tier** or **The Rest**. Each criterion below is tagged with which tier it produces. Fixed rules (not criteria, always apply): **Notebook horses are always Top Tier**, and **tracked horses (`data/tracked/tracked-horses.xlsx`, from the HorseTracker/VirtualStable email feeds) are always Top Tier.** Qualifying purely via a followed trainer (no other criterion met) is The Rest, unless a specific criterion says otherwise.
 
 ## Active criteria
 
