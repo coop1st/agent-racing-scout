@@ -19,7 +19,7 @@ _(Ireland omitted — see coverage note below: Sunday's only Irish fixture, List
 
 | Horse | Trainer | Jockey | Track | Country | Race Time (Irish) | Odds | Notes |
 |---|---|---|---|---|---|---|---|
-| _(none identified this cycle — see coverage notes below)_ | | | | | | | |
+| _(none identified this cycle)_ | | | | | | | `tracked-horses.xlsx` checked directly — no tracked horse has a race dated 2026-09-20, so none were missed. |
 
 ## The Rest
 
@@ -56,7 +56,7 @@ _Race times: UK Flat racing (Hamilton) uses the same September clock as Irish ti
 
 ## Coverage notes / gaps this cycle
 
-- **`data/tracked/tracked-horses.xlsx` could not be checked this cycle.** The scouting session had no available tool to parse the binary .xlsx file (no spreadsheet-capable tool in this session's toolset, unlike some prior cycles where a Python/openpyxl pass was run separately). This means any tracked horse running Sunday 20 Sept — which would be Top Tier by the fixed rule — may be missing from this list. Flagging this explicitly rather than silently omitting it; recommend a follow-up check of the tracked-horses file against Sunday's card before relying on this list as complete for Top Tier.
+- **`data/tracked/tracked-horses.xlsx`**: the scouting session had no tool to parse the binary .xlsx directly, so it was checked separately with a Python/openpyxl pass. Result: no row in the file has a Race Date of 2026-09-20, so no tracked horse was missed from Top Tier this cycle.
 - **Ireland: no Flat racing at all on 20 September 2026.** The only Irish fixture is Listowel (Harvest Festival opener), confirmed entirely National Hunt — 3 hurdle races, 1 rated novice chase, 1 handicap chase, and an INH Flat (bumper) race, none of which are Flat racing in scope. No Irish coverage gap — there was simply nothing to cover.
 - **France (Fontainebleau) — real gap.** Racing Post and Racing TV confirm a 7-race flat meeting at Fontainebleau (Hippodrome de la Solle) on 20 Sept as part of a "Journée Portes Ouvertes"/Journées du Patrimoine open day, with races roughly 14:32–18:02 local. However, no runner-level data (horses, trainers, jockeys, sires) could be sourced: France Galop's own reunion/calendar sub-pages 404'd, Racing Post and Racing TV don't carry detailed cards for this fixture, and every French-language racing site tried (geny.com, zone-turf.fr, pmu.fr, zeturf.fr, canalturf.com, equidia.fr, hippodrome-solle.com, paris-turf.com) is blocked by the network egress proxy. This is a genuine coverage gap for a real fixture, not a "nothing happening" case — the criteria/trainer-follow/top-sire checks could not be applied to this meeting at all.
 - **UK (Hamilton) — sire data unobtainable for the one maiden race.** The 14:00 Wee Brian Reilly Memorial EBF Restricted Maiden Stakes (2yo, 8 runners: Bowdens, Celtic Storm, Charmed Boy, Frontier Legend, Glen In Rome, Lion's Den, Unicorn Milkshake, Pen Lan Icon) is the only maiden/novice race on the Hamilton card, so it's the only place the top-sire criterion could apply for the UK today. Racing Post's racecard view didn't expose sires for this race, and follow-up per-horse searches (Timeform, Sporting Life, pedigreequery.com — the latter two blocked by the proxy) didn't turn up reliable sire data for these specific 2yos. None of the followed trainers had runners at Hamilton today (confirmed against the full 7-race card), so this gap only affects the top-sire criterion, not trainer-follow coverage.
