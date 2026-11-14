@@ -37,7 +37,7 @@ Each run checks the Notebook, the trainer follow list, and current criteria agai
 - [x] Racing Scout agent
 - [x] Notebook + trainer follow list structure
 - [x] GitHub repo pushed (needed for the cloud scheduled routine)
-- [x] Email delivery wired up (Gmail MCP connector — drafts only, no send capability, so the agent creates/updates a Gmail draft each cycle for the user to send manually). The Gmail connector is permanently parked on **owner-email-removed** (decided 2026-08-15) — this is also the account the horsetracker/virtualstable tracked-horse emails land in, so no account-swapping or forwarding filter is needed. Scouted Horses drafts are self-addressed to owner-email-removed.
+- [x] Email delivery wired up (Gmail MCP connector — drafts only, no send capability, so the agent creates/updates a Gmail draft each cycle for the user to send manually). The Gmail connector is permanently parked on the owner's second Gmail account (decided 2026-08-15) — this is also the account the horsetracker/virtualstable tracked-horse emails land in, so no account-swapping or forwarding filter is needed. Scouted Horses drafts are self-addressed to owner-email-removed.
 - [x] Criteria added to `data/criteria/criteria.md` (4 so far: top sire/damsire in maiden-novice, 2nd career start for a followed trainer, class-drop off Group form, USA top-trainer MSW-to-claimer drop)
 - [x] Sunday/Wednesday 2pm Irish time routine created (cloud routines `trig_012sduS8BWEiDkkicECJSokm` Sun, `trig_01HCT4cvt9yD9CYUuSmJ6Y23` Wed)
 - [x] Run first scouting session (infrastructure confirmed working: network access to UK/Ireland/France sources plus Horse Racing Nation/NYRA for USA, Gmail draft creation, and GitHub push all verified via test runs)
